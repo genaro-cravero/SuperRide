@@ -4,10 +4,11 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     private Transform playerTransform;
-    [SerializeField] private Vector2 limitValueX, limitValueY;
-    private Vector2 _touchStartPos, _touchEndPos;
-    [SerializeField]private Vector2 _hardnessToMove = new Vector2(0.25f,0.25f);
-    bool moved;
+    [SerializeField] private Vector2 limitValueX;
+    private Vector2 _touchStartPos, _touchEndPos, _auxPos;
+    [SerializeField] private Vector2 _hardnessToMove = new Vector2(0.25f, 0.25f);
+    private bool moved;
+    private float _timeToStationary = 0.05f, _currentTimeToStationary = 0f;
 
     void Start()
     {
@@ -15,33 +16,51 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
-        //! ESTA MAL PENSADO EL MOVIMIENTO, AHORA ES COMO UN JOYSTICK,
-        //! DEBERÍA CALCULAR CUANDO TERMINA DE MOVERSE EN UNA DIRECCIÓN Y CUANDO EMPIEZA A HACERLO EN LA OTRA
 
-        // Si se está tocando la pantalla
+        // If touching the screen
         if (Input.touchCount > 0)
         {
             if (Input.GetTouch(0).phase == TouchPhase.Began)
             {
+                //?Start Touch
                 _touchStartPos = _touchEndPos = Input.GetTouch(0).position;
             }
-            else if(Input.GetTouch(0).phase == TouchPhase.Ended)
+            else if (Input.GetTouch(0).phase == TouchPhase.Ended)
             {
-                _touchStartPos = _touchEndPos = Vector2.zero;
+                //?End Touch
+                _touchEndPos = Vector2.zero;
+                moved = false;
+                _currentTimeToStationary = 0f;
+
             }
             if (Input.GetTouch(0).phase == TouchPhase.Moved)
             {
+                //?Move Touch
+                if (_currentTimeToStationary >= _timeToStationary)
+                {
+                    //If goes in the opposite direction reset the start pos
+                    if (_auxPos.x - _touchStartPos.x < 0 && Input.GetTouch(0).position.x - _auxPos.x > 0)
+                        _touchStartPos = _touchEndPos = Input.GetTouch(0).position;
+                    else if (_auxPos.x - _touchStartPos.x > 0 && Input.GetTouch(0).position.x - _auxPos.x < 0)
+                        _touchStartPos = _touchEndPos = Input.GetTouch(0).position;
+
+                    _currentTimeToStationary = 0f;
+
+                }
                 MovePlayer();
                 moved = true;
+                _currentTimeToStationary = 0f;
             }
-            if(Input.GetTouch(0).phase == TouchPhase.Stationary && moved)
+            if (Input.GetTouch(0).phase == TouchPhase.Stationary && moved)
             {
-                //! Ojo aca podriamos detectar cuando cambia de direccion
-                Debug.Log("Stationary");
+                //?Touch Stay in the same position
+                _currentTimeToStationary += Time.deltaTime;
+                _auxPos = Input.GetTouch(0).position;
             }
-            if(Input.GetTouch(0).phase == TouchPhase.Canceled || Input.GetTouch(0).phase == TouchPhase.Ended)
+            if (Input.GetTouch(0).phase == TouchPhase.Canceled || Input.GetTouch(0).phase == TouchPhase.Ended)
             {
-                Debug.Log("Canceled");
+                //?Touch Cancelled
+                _currentTimeToStationary = 0f;
                 moved = false;
             }
         }
@@ -53,16 +72,12 @@ public class PlayerMovement : MonoBehaviour
     {
         _touchEndPos = Input.GetTouch(0).position;
         float zPos = (_touchEndPos.x - _touchStartPos.x) / (Screen.width * _hardnessToMove.x);
-        float yPos = (_touchEndPos.y - _touchStartPos.y) / (Screen.height * _hardnessToMove.y);
-        // Debug.Log(yPos);
 
-        // Normalizar los valores para que estén entre -1 y 1
+        // Clamp the values between -1 y 1
         zPos = Mathf.Clamp(zPos, -1f, 1f);
-        yPos = Mathf.Clamp(yPos, -1f, 1f);
 
-        float finalZPos = Mathf.Clamp(zPos + playerTransform.localPosition.z , limitValueX.x, limitValueX.y);
-        float finalYPos = Mathf.Clamp(yPos + playerTransform.localPosition.y, limitValueY.x, limitValueY.y);
+        float finalZPos = Mathf.Clamp(zPos + playerTransform.localPosition.z, limitValueX.x, limitValueX.y);
 
-        playerTransform.localPosition = new Vector3(0, finalYPos, finalZPos);
+        playerTransform.localPosition = new Vector3(0, 0, finalZPos);
     }
 }
