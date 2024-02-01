@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(0.1f, 5f)] private float _limitValueX = 1.2f;
     void Start()
     {
-        playerTransform = transform.GetChild(0).GetComponent<Transform>();
+        playerTransform = GetComponent<Transform>();
     }
     void Update()
     {

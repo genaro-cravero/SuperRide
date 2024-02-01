@@ -9,7 +9,7 @@ public class CameraHolder : MonoBehaviour
 
     void Start()
     {
-        _playerTransform = GameObject.Find("Player").transform;
+        _playerTransform = GameObject.Find("Player").transform.parent;
         _initialRotation = transform.eulerAngles;
     }
     void LateUpdate()

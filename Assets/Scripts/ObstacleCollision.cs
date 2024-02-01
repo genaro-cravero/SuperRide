@@ -1,15 +1,18 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using PathCreation.Examples;
 
 public class ObstacleCollision : MonoBehaviour
 {
-    public GameObject thePlayer;
 
     void OnTriggerEnter(Collider other)
     {
-        this.gameObject.GetComponent<BoxCollider>().enabled = false;
-        thePlayer.GetComponent<PlayerMovement>().enabled = false;
+        if(other.CompareTag("Player"))
+        {
+            this.gameObject.GetComponent<BoxCollider>().enabled = false;
+            other.GetComponent<PlayerMovement>().enabled = false;
+            other.GetComponentInParent<PathFollower>().enabled = false;
+        }
     }
         
     

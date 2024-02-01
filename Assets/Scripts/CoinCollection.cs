@@ -6,17 +6,15 @@ using UnityEngine;
 public class CoinCollection : MonoBehaviour
 {
     
-    private int Coin = 0;
-
-    public TextMeshProUGUI coinText;
+    private int _coin = 0;
+    [SerializeField] private TextMeshProUGUI _coinText;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.transform.tag == "Coin")
+        if(other.CompareTag("Coin"))
         {
-            Coin++;
-            coinText.text = "Coin: " + Coin.ToString();
-            //Debug.Log(Coin);
+            _coin++;
+            _coinText.text = "Coin: " + _coin.ToString();
             Destroy(other.gameObject);
         }
     }
