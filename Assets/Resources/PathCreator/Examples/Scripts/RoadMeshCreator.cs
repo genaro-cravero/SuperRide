@@ -102,6 +102,17 @@ namespace PathCreation.Examples {
 
                 }
 
+                //Set collider
+                if (i == 0)
+                {
+                    MeshCollider meshCollider = meshHolder.GetComponent<MeshCollider>();
+                    if (meshCollider == null)
+                    {
+                        meshCollider = meshHolder.AddComponent<MeshCollider>();
+                    }
+                    meshCollider.sharedMesh = mesh;
+                }
+
                 vertIndex += 8;
                 triIndex += 6;
             }
