@@ -11,7 +11,9 @@ public class PlayerColliders : MonoBehaviour
     public bool IsGrounded()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position + feetPosition, 0.1f, LayerMask.GetMask("Ground"));
-        return colliders.Length > 0;
+        bool isGrounded = colliders.Length > 0;
+        GetComponent<Animator>().SetBool("IsGrounded", isGrounded);
+        return isGrounded;
     }
 
     private void OnDrawGizmosSelected() {

@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private float _currentTimeToJump = 0f;
     private float _globalGravity = -9.81f;
     private Rigidbody _rb;
+    private Animator _animator;
     
     //? Scripts references
     private PlayerColliders _playerColliders;
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _animator = GetComponent<Animator>();
         _playerColliders = GetComponent<PlayerColliders>();
     }
     void Update()
@@ -72,6 +74,9 @@ public class PlayerMovement : MonoBehaviour
     {
         // Add force to jump
         GetComponent<Rigidbody>().AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+
+        //Play jump animation
+        _animator.SetTrigger("Jump");
 
     }
 

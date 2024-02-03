@@ -10,18 +10,17 @@ public class Power1Test : SuperPower
     public override void StartPower()
     {
         base.StartPower();
-        _cameraHolder.SwitchCamera(_cameraHolder._virtualCameras[1]);
         StartCoroutine(PowerDuration());
     }
 
     public override void EndPower()
     {
-        _cameraHolder.SwitchCamera(_cameraHolder._virtualCameras[0]);
+        base.EndPower();
     }
 
     IEnumerator PowerDuration()
     {
-        yield return new WaitForSeconds(_duration);
+        yield return new WaitForSeconds(duration);
         EndPower();
     }
 }

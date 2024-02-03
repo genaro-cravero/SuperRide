@@ -7,10 +7,8 @@ public class CoinCollection : MonoBehaviour
     
     private int _coin = 0;
     [SerializeField] private TextMeshProUGUI _coinText;
-    private CameraHolder _cameraHolder;
 
     private void Start() {
-        _cameraHolder = FindObjectOfType<CameraHolder>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -28,8 +26,7 @@ public class CoinCollection : MonoBehaviour
         if(other.CompareTag("SuperPower"))
         {
             GameManager.IsSuperPowered = true;
-            _cameraHolder.SwitchCamera(_cameraHolder._virtualCameras[1]);
-            other.GetComponent<SuperPower>().StartPower();
+            other.GetComponentInParent<SuperPower>().StartPower();
             Destroy(other.gameObject);
         }
     }

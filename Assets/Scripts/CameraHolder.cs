@@ -8,12 +8,16 @@ public class CameraHolder : MonoBehaviour
     private Transform _playerTransform;
     private Vector3 _initialRotation;
     [HideInInspector] public List<CinemachineVirtualCamera> _virtualCameras;
+    [HideInInspector] public CinemachineBrain _cinemachineBrain;
 
     void Start()
     {
         _playerTransform = GameObject.Find("Player").transform.parent;
         _initialRotation = transform.eulerAngles;
 
+        _cinemachineBrain = FindAnyObjectByType<CinemachineBrain>();
+
+        //Find all virtual cameras in the scene
         foreach(Transform child in transform)
         {
             if(child.GetComponent<CinemachineVirtualCamera>())
@@ -30,6 +34,7 @@ public class CameraHolder : MonoBehaviour
         transform.eulerAngles = new Vector3(_playerTransform.eulerAngles.x + _initialRotation.x,
          _playerTransform.eulerAngles.y + _initialRotation.y - 90, _initialRotation.z);
 
+
     }
 
     public void SwitchCamera(CinemachineVirtualCamera _cam)
@@ -45,4 +50,5 @@ public class CameraHolder : MonoBehaviour
             vcam.Priority = 0;
         }
     }   
+
 }
