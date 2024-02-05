@@ -11,7 +11,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(1f, 100f)] private float _jumpForce = 5f;
     [SerializeField, Range(0.1f, 25f)] private float _gravityScale = 1f;
     private float _currentTimeToJump = 0f;
-    private float _globalGravity = -9.81f;
     private Rigidbody _rb;
     private Animator _animator;
     
@@ -54,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
     {
 
         // Apply gravity
-        Vector3 _gravity = _globalGravity * _gravityScale * Vector3.up;
+        Vector3 _gravity = GameManager.GlobalGravity * _gravityScale * Vector3.up;
         _rb.AddForce(_gravity, ForceMode.Acceleration);
     }
 
