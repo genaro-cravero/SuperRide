@@ -5,8 +5,8 @@ using UnityEngine;
 public class JetPack : SuperPower
 {
     [SerializeField, Range(0.1f,30)] private float _maxHeight = 7f;
-    [SerializeField, Range(5f,100)] private float _flyForce = 35f;
-    [SerializeField, Range(0.1f, 25f)] private float _gravityScale = 2f;
+    [SerializeField, Range(5f,100)] private float _flyForce = 10f;
+    [SerializeField, Range(0.1f, 25f)] private float _gravityScale = 2.50f;
 
     private void Update() {
         if(!_isPowerActive) return;
