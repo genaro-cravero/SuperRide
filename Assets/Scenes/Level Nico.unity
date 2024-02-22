@@ -542,8 +542,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 50
   _maxHeight: 7
-  _velocity: 10
   _gravityScale: 2.5
+  _rotationSpeed: 12
 --- !u!1 &667846028
 GameObject:
   m_ObjectHideFlags: 0
