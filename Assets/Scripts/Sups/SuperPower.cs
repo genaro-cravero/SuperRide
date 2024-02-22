@@ -15,6 +15,8 @@ public class SuperPower : MonoBehaviour
         _cameraHolder = FindObjectOfType<CameraHolder>();
         _player = GameObject.Find("Player");
         _rb = _player.GetComponent<Rigidbody>();
+        StartCoroutine(PowerDuration());
+
     }
     public virtual void StartPower()
     {
@@ -23,6 +25,10 @@ public class SuperPower : MonoBehaviour
         _player.GetComponent<BoxCollider>().size = new Vector3(2, 0.7045513f, 0.4281334f);
         _player.GetComponent<PlayerMovement>().enabled = false;
         StartCoroutine(WaitUntilCameraBlends());
+    }
+    protected virtual void Execute()
+    {
+        _player.GetComponent<PlayerColliders>().IsGrounded();
     }
     public virtual void EndPower()
     {
@@ -38,6 +44,12 @@ public class SuperPower : MonoBehaviour
     {
         yield return new WaitForSeconds(0.7f);
         Camera.main.orthographic = true;
+    }
+
+    protected IEnumerator PowerDuration()
+    {
+        yield return new WaitForSeconds(duration);
+        EndPower();
     }
 
 }

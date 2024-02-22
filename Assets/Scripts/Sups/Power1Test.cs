@@ -18,9 +18,4 @@ public class Power1Test : SuperPower
         base.EndPower();
     }
 
-    IEnumerator PowerDuration()
-    {
-        yield return new WaitForSeconds(duration);
-        EndPower();
-    }
 }

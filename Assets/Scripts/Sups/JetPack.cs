@@ -10,6 +10,7 @@ public class JetPack : SuperPower
 
     private void Update() {
         if(!_isPowerActive) return;
+        base.Execute();
         
         if (Input.touchCount > 0 )
         {
@@ -31,23 +32,12 @@ public class JetPack : SuperPower
         _rb.AddForce(_gravity, ForceMode.Acceleration);
     }
 
-    public override void StartPower()
-    {
-        base.StartPower();
-        StartCoroutine(PowerDuration());
-    }
-
+    
     public override void EndPower()
     {
         base.EndPower();
         _player.GetComponent<Animator>().SetBool("JetPack", false);
 
-    }
-
-    IEnumerator PowerDuration()
-    {
-        yield return new WaitForSeconds(duration);
-        EndPower();
     }
 
     void Fly()

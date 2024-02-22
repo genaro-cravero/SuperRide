@@ -25,7 +25,6 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
-
         // If touching the screen
         if (Input.touchCount > 0)
         {
