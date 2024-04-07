@@ -9,7 +9,8 @@ public class GravitySuit : SuperPower
     [SerializeField, Range(2f, 255f)] private float _rotationSpeed = 12f;
     private int _direction = 1;
     private bool _isUp;
-    [HideInInspector] public bool isUp
+    [HideInInspector]
+    public bool isUp
     {
         get { return _isUp; }
         set
@@ -18,17 +19,25 @@ public class GravitySuit : SuperPower
             _direction = isUp ? -1 : 1;
         }
     }
-    private bool _canTouch = true;
-    
+    private bool _isRotating = false;
+    private Coroutine _currentRotation = null;
 
     private void Update()
     {
         if (!_isPowerActive) return;
         base.Execute();
-        
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began && _canTouch)
+
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
-            StartCoroutine(ChangeVertical());
+
+            if (_isRotating)
+            {
+                StopCoroutine(_currentRotation);
+
+                _isRotating = false;
+            }
+
+            _currentRotation = StartCoroutine(ChangeVertical());
         }
         // else if (Input.touchCount <= 0 && _player.transform.position.y >= _maxHeight)
         // {
@@ -43,11 +52,12 @@ public class GravitySuit : SuperPower
         if (!_isPowerActive) return;
 
         // Apply gravity
-        if(_player.transform.position.y > _maxHeight && isUp)
+        if (_player.transform.position.y > _maxHeight && isUp)
         {
             _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
             return;
-        }else if(_player.GetComponent<PlayerColliders>().IsGrounded() && !isUp)
+        }
+        else if (_player.GetComponent<PlayerColliders>().IsGrounded() && !isUp)
         {
             _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
             return;
@@ -59,27 +69,26 @@ public class GravitySuit : SuperPower
 
     private IEnumerator ChangeVertical()
     {
-        //! Tengo que hacer que me permita girar cada vez que toco instantaneamente
-        //! Pero ahora si hago eso queda en horizontal y no puedo volver a la normalidad
-        _canTouch = false;
+        
+        _isRotating = true;
 
         //Slowly otate player 180 degrees on x
 
         float _targetRotationX = isUp ? 0 : 180;
         float _targetRotationY = isUp ? -90 : 90;
-        Quaternion _targetRotation = Quaternion.Euler(_targetRotationX, _player.transform.rotation.y + _targetRotationX , 0);
+        Quaternion _targetRotation = Quaternion.Euler(_targetRotationX, _player.transform.rotation.y + _targetRotationX, 0);
         isUp = !isUp;
 
         _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
         while (Quaternion.Angle(_player.transform.rotation, _targetRotation) > 1f)
         {
-            Debug.Log(Quaternion.Angle(_player.transform.rotation, _targetRotation)) ;
+            // Debug.Log(Quaternion.Angle(_player.transform.rotation, _targetRotation));
             _player.transform.rotation = Quaternion.Slerp(_player.transform.rotation, _targetRotation, _rotationSpeed * Time.deltaTime);
             yield return null;
         }
 
         _player.transform.rotation = _targetRotation;
-        _canTouch = true;
+        _isRotating = false;
         yield return null;
 
     }
